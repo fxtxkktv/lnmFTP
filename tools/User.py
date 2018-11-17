@@ -161,7 +161,7 @@ def do_changeuser(id):
 
     if not username :
        msg = {'color':'red','message':'必填字段为空，提交失败!'}
-	   return '-2'
+       return '-2'
 
     sql = """
             UPDATE user SET
