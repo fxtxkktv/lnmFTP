@@ -24,7 +24,7 @@ rpm -i pure-ftpd-debuginfo-1.0.46-lnmos.x86_64.rpm <br>
 pip install -r readme/requirements.txt <br>
 
 3. 创建数据库并恢复数据模版 <br>
-[创建数据库]: #create database ftpdb <br>
+[创建数据库]: # mysql -u root -p -e "create database ftpdb" <br>
 [恢复数据模版]: # mysql -u root -p ftpdb < readme/xxxxxx_Init.sql <br>
 [配置数据库连接及其他]: # vim config/config.ini <br>
 
