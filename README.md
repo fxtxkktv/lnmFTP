@@ -19,7 +19,7 @@ source venv/bin/activate <br>
 MySQL服务 <br>
 yum install -y mysql-server mysql-devel MySQL-Python <br>
 FTP服务: [安装lnmOS定制RPM包,可在客户端下载中获取] <br>
-rpm -i pure-ftpd-debuginfo-1.0.46-lnmos.x86_64.rpm <br>
+rpm -i pure-ftpd-1.0.46-lnmos.x86_64.rpm <br>
 安装Python程序扩展包 <br>
 pip install -r readme/requirements.txt <br>
 
