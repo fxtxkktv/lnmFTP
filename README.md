@@ -38,7 +38,7 @@ pip install -r readme/requirements.txt <br>
 如有问题可直接反馈或邮件master@lnmos.com <br>
 
 ## 项目截图
-### 修改上传中文文件名乱码的问题
+### 修改上传中文文件名乱码的问题(bottle.py中2372行)
 ![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/mod_bottle_1.jpg)
 ### 系统管理
 ![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/systeminfo.jpg)
