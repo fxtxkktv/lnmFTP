@@ -281,12 +281,12 @@ $(function(){
                   if(data==0){
                     $('#myModal').modal('hide');
                     $('#myLoadTable').bootstrapTable('refresh');
-		    //alert("操作成功,");
+                    //alert("操作成功,");
                     message.message_show(200,200,'成功','操作成功');   
                   }else if(data==-1){
                       message.message_show(200,200,'失败','操作失败');
                   }else{
-                        console.log(data);return false;
+                      message.message_show(200,200,'添加失败','表单数据填写错误(用户名长度、密码长度等)');return false;
                 }
             },'html');
        });

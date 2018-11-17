@@ -86,7 +86,7 @@ def adduser():
     m.update(password)
     password = m.hexdigest()
     #检查表单长度
-    if len(username) < 4 or (len(password) < 8 and len(password) > 16) :
+    if len(username) < 4 or (len(password) < 8 or len(password) > 16) :
        message = "用户名或密码长度不符要求！"
        return '-2'
     #处理默认值
@@ -155,7 +155,7 @@ def do_changeuser(id):
        logging.error(vdir)
 
     #检查表单长度
-    if len(username) < 4 or (len(password) < 8 and len(password) > 16) :
+    if len(username) < 4 or (len(password) < 8 or len(password) > 16) :
        msg = {'color':'red','message':'用户名或密码长度错误，提交失败!'}
        return '-2'
 
