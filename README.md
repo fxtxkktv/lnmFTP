@@ -24,21 +24,19 @@ rpm -i pure-ftpd-debuginfo-1.0.46-lnmos.x86_64.rpm <br>
 pip install -r readme/requirements.txt <br>
 
 3. 创建数据库并恢复数据模版 <br>
-[创建数据库] <br>
-[恢复数据模版] <br>
-[配置数据库连接及其他] vim config/config.ini <br>
+[创建数据库]: #create database ftpdb <br>
+[恢复数据模版]: # mysql -u root -p < readme/xxxxxx_Init.sql <br>
+[配置数据库连接及其他]: # vim config/config.ini <br>
 
 4. 正式运行程序 <br>
 [程序调试]：python27 main.py <br>
 [后台运行]: startweb.sh restart <br>
-[前段访问]：http://IP地址:端口号 <br>
-
-备注：程序启动将自动接管网络接口配置、DNS服务、DHCP服务等相关，建议关闭系统中涉及到的相关程序，以免相互冲突。<br>
+[前段访问]：http://IP地址:端口号 默认用户名：admin 密码: admin<br>
 
 如有问题可直接反馈或邮件master@lnmos.com <br>
 
 ## 项目截图
-### 修改上传中文文件名乱码的问题(bottle.py中2372行)
+### 修改上传中文文件名被过滤的问题(bottle.py中2372行)
 ![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/mod_bottle_1.jpg)
 ### 系统管理
 ![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/systeminfo.jpg)
