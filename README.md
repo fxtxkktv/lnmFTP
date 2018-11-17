@@ -29,7 +29,7 @@ pip install -r readme/requirements.txt <br>
 [配置数据库连接及其他]: # vim config/config.ini <br>
 
 4. 正式运行程序 <br>
-[程序调试]：python27 main.py <br>
+[程序调试]：python main.py <br>
 [后台运行]: startweb.sh restart <br>
 [前段访问]：http://IP地址:端口号 默认用户名：admin 密码: admin<br>
 
