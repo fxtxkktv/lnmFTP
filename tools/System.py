@@ -334,7 +334,7 @@ def do_upload():
        #if ext not in ('.rar','.zip','.bin','.tar','.tgz','.tar.gz','.doc','.docx','.xls','.xlsx','.ppt','.pptx'):
        #        msg = {'color':'red','message':u'文件格式不被允许.请重新上传'}
        #        return template('fileshare',session=s,msg=msg,urladdr=urladdr)
-    cmds.gettuplerst('%s/sbin/mkdir -p %s' % (gl.get_value('wkdir'),ownftpdir))
+    cmds.gettuplerst('%s/sbin/mkdir -p %s && chown vftp:vftp %s' % (gl.get_value('wkdir'),ownftpdir,ownftpdir))
     try:
        upload.save('%s/%s' % (ownftpdir,filename))
        cmds.getdictrst('chown vftp:vftp %s/%s' % (ownftpdir,filename))
