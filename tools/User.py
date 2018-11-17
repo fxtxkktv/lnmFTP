@@ -29,11 +29,11 @@ def user():
     m.update(oldpwd)
     password = m.hexdigest()
     if result[0].get('password') != password :
-	msg = {'color':'red','message':u'旧密码验证失败，请重新输入'}
-	return template('changepasswd',session=s,msg=msg,info={})
+       msg = {'color':'red','message':u'旧密码验证失败，请重新输入'}
+       return template('changepasswd',session=s,msg=msg,info={})
     if newpwd != newpwds :
-	msg = {'color':'red','message':u'密码两次输入不一致，请重新输入'}
-        return template('changepasswd',session=s,msg=msg,info={})
+       msg = {'color':'red','message':u'密码两次输入不一致，请重新输入'}
+       return template('changepasswd',session=s,msg=msg,info={})
     #生成新密码md5
     n = hashlib.md5()
     n.update(newpwd)
@@ -41,13 +41,13 @@ def user():
     sql2 = " update user set password=%s where username=%s "
     result = writeDb(sql2,(password,username))
     if result == True :
-	wrtlog('User','更改密码成功',username,s.get('clientip'))
-	msg = {'color':'green','message':u'密码更新成功,后续请以新密码登录系统'}
-    	return template('changepasswd',session=s,msg=msg,info={})
+       wrtlog('User','更改密码成功',username,s.get('clientip'))
+       msg = {'color':'green','message':u'密码更新成功,后续请以新密码登录系统'}
+       return template('changepasswd',session=s,msg=msg,info={})
     else:
-	wrtlog('User','更改密码失败',username,s.get('clientip'))
-	msg = {'color':'red','message':u'密码更新失败,请核对错误'}
-        return template('changepasswd',session=s,msg=msg,info={})
+       wrtlog('User','更改密码失败',username,s.get('clientip'))
+       msg = {'color':'red','message':u'密码更新失败,请核对错误'}
+       return template('changepasswd',session=s,msg=msg,info={})
 
 @route('/administrator')
 @checkAccess
@@ -86,9 +86,9 @@ def adduser():
     m.update(password)
     password = m.hexdigest()
     #检查表单长度
-    if len(username) < 4 or (len(password) > 0 and len(password) < 16) :
-	message = "用户名或密码长度不符要求！"
-	return '-2'
+    if len(username) < 4 or (len(password) < 8 and len(password) > 16) :
+       message = "用户名或密码长度不符要求！"
+       return '-2'
     #处理默认值
     if ulbandwidth == "":
        ulbandwidth = 0
@@ -107,8 +107,8 @@ def adduser():
     
     #检测表单各项值，如果出现为空的表单，则返回提示
     if not (username and password ):
-        message = "表单不允许为空！"
-        return '-2'
+       message = "表单不允许为空！"
+       return '-2'
 
     sql = """
             INSERT INTO
@@ -118,11 +118,11 @@ def adduser():
     data = (username,password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access)
     result = writeDb(sql,data)
     if result:
-	wrtlog('User','新增用户成功:%s' % username,s['username'],s.get('clientip'))
-        return '0'
+       wrtlog('User','新增用户成功:%s' % username,s['username'],s.get('clientip'))
+       return '0'
     else:
-	wrtlog('User','新增用户失败:%s' % username,s['username'],s.get('clientip'))
-        return '-1'
+       wrtlog('User','新增用户失败:%s' % username,s['username'],s.get('clientip'))
+       return '-1'
 
 @route('/changeuser/<id>',method="POST")
 @checkAccess
@@ -141,12 +141,12 @@ def do_changeuser(id):
 
     #把密码进行加密处理后再保存到数据库中
     if not password :
-	sql = "select password from user where id = %s"
-	password = readDb(sql,(id,))[0].get('password')
+       sql = "select password from user where id = %s"
+       password = readDb(sql,(id,))[0].get('password')
     else:
-        m = hashlib.md5()
-        m.update(password)
-        password = m.hexdigest()
+       m = hashlib.md5()
+       m.update(password)
+       password = m.hexdigest()
 
     #处理vdir规范
     if vdir.endswith('/') or vdir.startswith('/'):
@@ -155,13 +155,13 @@ def do_changeuser(id):
        logging.error(vdir)
 
     #检查表单长度
-    if len(username) < 4 or (len(password) > 4 and len(password) < 16) :
-        msg = {'color':'red','message':'用户名或密码长度错误，提交失败!'}
-        return template(formaddr,session=s,msg=msg)
+    if len(username) < 4 or (len(password) < 8 and len(password) > 16) :
+       msg = {'color':'red','message':'用户名或密码长度错误，提交失败!'}
+       return '-2'
 
     if not username :
-        msg = {'color':'red','message':'必填字段为空，提交失败!'}
-	return template(formaddr,session=s,msg=msg)
+       msg = {'color':'red','message':'必填字段为空，提交失败!'}
+	   return '-2'
 
     sql = """
             UPDATE user SET
@@ -171,14 +171,14 @@ def do_changeuser(id):
     data = (username,password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access,id)
     result = writeDb(sql,data)
     if result == True:
-	wrtlog('User','更新用户成功:%s' % username,s['username'],s.get('clientip'))
-	msg = {'color':'green','message':'更新成功!'}
-	return '0'
-        #return template('user',session=s,msg=msg)
+       wrtlog('User','更新用户成功:%s' % username,s['username'],s.get('clientip'))
+       msg = {'color':'green','message':'更新成功!'}
+       return '0'
     else:
-	wrtlog('User','更新用户失败:%s' % username,s['username'],s.get('clientip'))
-	msg = {'color':'red','message':'更新失败!'}
-	return template('user',session=s,msg=msg)
+       wrtlog('User','更新用户失败:%s' % username,s['username'],s.get('clientip'))
+       msg = {'color':'red','message':'更新失败!'}
+       return '-1'
+       #return template('user',session=s,msg=msg)
 
 @route('/deluser',method="POST")
 @checkAccess
@@ -189,29 +189,29 @@ def deluser():
         return '-1'
     # 禁止删除ADMIN账户
     if id == '1':
-	return '-1'
+       return '-1'
     for i in id.split(','):
-	if id == '1':
-	   return '-1'
-    	sql = "delete from user where id in (%s) "
-    	result = writeDb(sql,(i,))
+        if id == '1':
+           return '-1'
+    sql = "delete from user where id in (%s) "
+    result = writeDb(sql,(i,))
     if result:
-	wrtlog('User','删除用户成功',s['username'],s.get('clientip'))
-        return '0'
+       wrtlog('User','删除用户成功',s['username'],s.get('clientip'))
+       return '0'
     else:
-	wrtlog('User','删除用户失败',s['username'],s.get('clientip'))
-        return '-1'
+       wrtlog('User','删除用户失败',s['username'],s.get('clientip'))
+       return '-1'
 
 @route('/api/getuser',method=['GET', 'POST'])
 @checkAccess
 def getuser():
     sql = """ SELECT U.id,U.username,U.ustatus,U.ulbandwidth,U.dlbandwidth,U.ipaccess,U.quotasize,U.comment,
-	concat(D.vdir,'/',U.vdir) as vdir,
-        U.vdir as vdirs,
-	date_format(adddate,'%%Y-%%m-%%d') as adddate 
-	FROM user as U  
-	LEFT OUTER JOIN ftpserv as D ON D.id='1' WHERE U.access = '0'
-	order by username
+          concat(D.vdir,'/',U.vdir) as vdir,
+          U.vdir as vdirs,
+          date_format(adddate,'%%Y-%%m-%%d') as adddate 
+          FROM user as U  
+          LEFT OUTER JOIN ftpserv as D ON D.id='1' WHERE U.access = '0'
+          order by username
     """
     userlist = readDb(sql,)
     return json.dumps(userlist)
