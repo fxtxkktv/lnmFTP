@@ -1,0 +1,50 @@
+# 该项目应用于企业FTP协议存储、文件外发、支持SSL+密码认证配置功能
+### 客户端下载：https://pan.baidu.com/s/1xDAfspJdBEm9ilipT61PbQ 分享密码:vzfn
+
+## 安装步骤(仅针对centos/redhat发行版,其他版本自行测试)
+
+1. 安装初始化环境 python >=2.7 (推荐lnmos定制版本,可以在"客户端下载"中获取) <br>
+rpm -i python27-2.7.15-lnmos.x86_64.rpm <br>
+export PATH=$PATH:/usr/local/python27/bin <br>
+安装pip工具 <br>
+wget https://bootstrap.pypa.io/get-pip.py <br>
+python27 get-pip.py <br>
+安装virtualenv组件[使程序运行环境和系统环境分离] <br>
+pip install virtualenv <br> 
+virtualenv -p /usr/local/python27/bin/python --no-site-packages venv <br>
+进入virtualenv环境 <br>
+source venv/bin/activate <br>
+
+2. 安装程序运行模块 <br>
+MySQL服务 <br>
+yum install -y mysql-server mysql-devel MySQL-Python <br>
+FTP服务: [安装lnmOS定制RPM包,可在客户端下载中获取] <br>
+rpm -i pure-ftpd-debuginfo-1.0.46-lnmos.x86_64.rpm <br>
+安装Python程序扩展包 <br>
+pip install -r readme/requirements.txt <br>
+
+3. 创建数据库并恢复数据模版 <br>
+[创建数据库] <br>
+[恢复数据模版] <br>
+[配置数据库连接及其他] vim config/config.ini <br>
+
+4. 正式运行程序 <br>
+[程序调试]：python27 main.py <br>
+[后台运行]: startweb.sh restart <br>
+[前段访问]：http://IP地址:端口号 <br>
+
+备注：程序启动将自动接管网络接口配置、DNS服务、DHCP服务等相关，建议关闭系统中涉及到的相关程序，以免相互冲突。<br>
+
+如有问题可直接反馈或邮件master@lnmos.com <br>
+
+## 项目截图
+### 帮助文档
+![其余界面](https://github.com/fxtxkktv/lnmVPN/blob/master/readme/mod_bottle_1.jpg)
+### 系统管理
+![其余界面](https://github.com/fxtxkktv/lnmVPN/blob/master/readme/systeminfo.jpg)
+### FTP服务
+![其余界面](https://github.com/fxtxkktv/lnmVPN/blob/master/readme/ftpserv.jpg)
+### 文件分享
+![其余界面](https://github.com/fxtxkktv/lnmVPN/blob/master/readme/fileshare.jpg)
+### 帮助页面
+![其余界面](https://github.com/fxtxkktv/lnmVPN/blob/master/readme/help.jpg)
