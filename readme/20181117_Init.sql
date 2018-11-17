@@ -102,7 +102,7 @@ CREATE TABLE `sysinfo` (
   `tim` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18758 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=18788 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,13 +113,13 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ç”¨æˆ·ID',
-  `username` varchar(50) NOT NULL DEFAULT '0' COMMENT 'å¸å·',
-  `password` varchar(50) NOT NULL DEFAULT '0' COMMENT 'å¯†ç ',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL DEFAULT '0',
+  `password` varchar(50) NOT NULL DEFAULT '0',
   `vdir` varchar(128) DEFAULT '',
   `ustatus` enum('0','1') NOT NULL DEFAULT '1',
   `ipaccess` varchar(15) DEFAULT '*',
-  `adddate` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'ç”¨æˆ·åŠ å…¥æ—¶é—´',
+  `adddate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `ulbandwidth` smallint(5) DEFAULT '0',
   `dlbandwidth` smallint(5) DEFAULT '0',
   `quotasize` smallint(5) DEFAULT '0',
@@ -127,10 +127,10 @@ CREATE TABLE `user` (
   `comment` longtext,
   `ulratio` smallint(6) DEFAULT '0',
   `dlratio` smallint(6) DEFAULT '0',
-  `access` int(1) DEFAULT '0' COMMENT 'æƒé™',
+  `access` int(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=utf8 COMMENT='ç”¨æˆ·è¡¨';
+) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -142,7 +142,7 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 10:35:51
+-- Dump completed on 2018-11-17 10:51:55
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ftpdb
@@ -180,7 +180,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 10:35:51
+-- Dump completed on 2018-11-17 10:51:55
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ftpdb
@@ -218,7 +218,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 10:35:51
+-- Dump completed on 2018-11-17 10:51:55
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ftpdb
@@ -256,4 +256,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 10:35:51
+-- Dump completed on 2018-11-17 10:51:55
