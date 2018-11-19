@@ -21,32 +21,32 @@ case "$1" in
         RETVAL=$?
         #echo
         if [ $RETVAL -eq 0 ] ;then
-	   echo "Done..."
-	else
-	   echo "Failed"
-	fi
+           echo "Done..."
+        else
+           echo "Failed"
+        fi
         ;;
   stop)
-	echo -en "Stoping WebServer:\t\t"
-	$wkdir/sbin/start-stop-daemon --stop --exec $wkdir/venv/bin/python >/dev/null 2>&1
-	if [ -f $pidfile ];then
-	   kill -9 $(cat $pidfile) >/dev/null 2>&1
-	fi
+        echo -en "Stoping WebServer:\t\t"
+        $wkdir/sbin/start-stop-daemon --stop --exec $wkdir/venv/bin/python >/dev/null 2>&1
+        if [ -f $pidfile ];then
+           kill -9 $(cat $pidfile) >/dev/null 2>&1
+        fi
         RETVAL=$?
         #echo
         if [ $RETVAL -eq 0 ] ;then
-	   rm -f $pidfile
-	   echo "Done..."
-	else
-	   echo "Failed"
-	fi
+           rm -f $pidfile
+           echo "Done..."
+        else
+           echo "Failed"
+        fi
         ;;
   status)
         if [ -f $pidfile ] && [ x"$(cat $pidfile)" != x"" ];then
-	   cat $pidfile
-	else
-	   echo "WebServer checking Failed..."
-	fi
+           cat $pidfile
+        else
+           echo "WebServer checking Failed..."
+        fi
         ;;
   restart)
         $0 stop
