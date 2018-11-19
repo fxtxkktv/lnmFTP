@@ -56,11 +56,11 @@ if __name__ == '__main__':
     app = default_app()
     app = SessionMiddleware(app, session_opts)
     if runSSL == 'False':
-       run(app=app,host=runListen,port=int(runPort),debug=runDebug,server='gevent',reloader=True)
+       run(app=app,host=runListen,port=int(runPort),debug=runDebug,server='gevent')
     elif runSSL == 'True':
        certfile='%s/certs/SSL/server.crt' % pro_path
        keyfile='%s/certs/SSL/server-key.pem' % pro_path
-       run(app=app,host=runListen, port=int(runPort),server='gevent',debug=runDebug,certfile=certfile,keyfile=keyfile,reloader=True)
+       run(app=app,host=runListen, port=int(runPort),server='gevent',debug=runDebug,certfile=certfile,keyfile=keyfile)
     else :
        print "Server Config Error..."
        sys.exit(1)

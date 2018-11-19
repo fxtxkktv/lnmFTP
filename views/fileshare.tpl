@@ -23,10 +23,11 @@
                 <div style="padding:-10px 0px;" class="widget-body no-padding">
                     <div class="tickets-container">
                         <div class="table-toolbar" style="float:left">
-			    <a id="ulfileshare" href="/ulfileshare" class="btn btn-primary ">
+                            <a id="ulfileshare" href="/ulfileshare" class="btn btn-primary ">
                                 <i class="btn-label fa fa-cloud-upload"></i>文件上传
                             </a>
-			    %if msg.get('message'):
+                            <span style="color:#666666;">注意:&nbsp;如果要生成链接，文件名称尽量不要含有中文或特殊字符，以免下载异常</span>
+                            %if msg.get('message'):
                                 <span style="color:{{msg.get('color','')}};font-weight:bold;">&emsp;{{msg.get('message','')}}</span>
                             %end
                         </div>

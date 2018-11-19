@@ -17,7 +17,7 @@ logfile="$wkdir/logs/myapp_run.log"
 case "$1" in
   start)
         echo -en "Starting WebServer:\t\t"
-        $wkdir/sbin/start-stop-daemon --start --background --no-close -m --pidfile $pidfile --exec $wkdir/venv/bin/python -- $myapp 2>$logfile
+        $wkdir/sbin/start-stop-daemon --start --background --no-close -m --pidfile $pidfile --exec $wkdir/venv/bin/python -- $myapp 2>>$logfile
         RETVAL=$?
         #echo
         if [ $RETVAL -eq 0 ] ;then
@@ -28,7 +28,7 @@ case "$1" in
         ;;
   stop)
 	echo -en "Stoping WebServer:\t\t"
-	$wkdir/sbin/start-stop-daemon --stop --name $myapp >/dev/null 2>&1
+	$wkdir/sbin/start-stop-daemon --stop --exec $wkdir/venv/bin/python >/dev/null 2>&1
 	if [ -f $pidfile ];then
 	   kill -9 $(cat $pidfile) >/dev/null 2>&1
 	fi
