@@ -81,14 +81,15 @@ def adduser():
     vdir = request.forms.get("vdir")
     comment = request.forms.get("comment")
     access = request.forms.get("access")
-    #把密码进行md5加密码处理后再保存到数据库中
-    m = hashlib.md5()
-    m.update(password)
-    password = m.hexdigest()
     #检查表单长度
     if len(username) < 4 or (len(password) < 8 or len(password) > 16) :
        message = "用户名或密码长度不符要求！"
        return '-2'
+    else:
+       #把密码进行md5加密码处理后再保存到数据库中
+       m = hashlib.md5()
+       m.update(password)
+       md5password = m.hexdigest()
     #处理默认值
     if ulbandwidth == "":
        ulbandwidth = 0
@@ -115,7 +116,7 @@ def adduser():
                 user(username,password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access)
             VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """
-    data = (username,password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access)
+    data = (username,md5password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access)
     result = writeDb(sql,data)
     if result:
        wrtlog('User','新增用户成功:%s' % username,s['username'],s.get('clientip'))
@@ -146,7 +147,7 @@ def do_changeuser(id):
     else:
        m = hashlib.md5()
        m.update(password)
-       password = m.hexdigest()
+       md5password = m.hexdigest()
 
     #处理vdir规范
     if vdir.endswith('/') or vdir.startswith('/'):
@@ -168,7 +169,7 @@ def do_changeuser(id):
             username=%s,password=%s,ustatus=%s,ulbandwidth=%s,dlbandwidth=%s,ipaccess=%s,quotasize=%s,vdir=%s,comment=%s,access=%s
             WHERE id=%s
         """
-    data = (username,password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access,id)
+    data = (username,md5password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access,id)
     result = writeDb(sql,data)
     if result == True:
        wrtlog('User','更新用户成功:%s' % username,s['username'],s.get('clientip'))
@@ -188,13 +189,12 @@ def deluser():
     if not id:
         return '-1'
     # 禁止删除ADMIN账户
-    if id == '1':
-       return '-1'
     for i in id.split(','):
         if id == '1':
            return '-1'
-    sql = "delete from user where id in (%s) "
-    result = writeDb(sql,(i,))
+        # MySQL多次删除ID,一次性删除异常
+        sql = "delete from user where id in (%s) "
+        result = writeDb(sql,(i,))
     if result:
        wrtlog('User','删除用户成功',s['username'],s.get('clientip'))
        return '0'
