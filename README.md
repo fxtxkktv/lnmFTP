@@ -46,3 +46,5 @@ pip install -r readme/requirements.txt <br>
 ![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/fileshare.jpg)
 ### 帮助页面
 ![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/help.jpg)
+### 支持捐赠
+![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/pay.jpg)
