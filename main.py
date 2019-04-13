@@ -62,5 +62,5 @@ if __name__ == '__main__':
        keyfile='%s/certs/SSL/server-key.pem' % pro_path
        run(app=app,host=runListen, port=int(runPort),server='gevent',debug=runDebug,certfile=certfile,keyfile=keyfile)
     else :
-       print "Server Config Error......"
+       print "Server Config Error..."
        sys.exit(1)
