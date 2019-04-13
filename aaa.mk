@@ -1,4 +1,3 @@
 pppppppppppppppppppppppppp
 dddddddddddddddddddddddddddddd
-dllllllllllllllllllllllllllllllllllllllllllllll
 sssssssssssssssssssssssssssssssssssssssssssssss
