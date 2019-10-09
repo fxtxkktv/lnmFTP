@@ -1,3 +1,0 @@
-pppppppppppppppppppppppppp
-dddddddddddddddddddddddddddddd
-sssssssssssssssssssssssssssssssssssssssssssssss
