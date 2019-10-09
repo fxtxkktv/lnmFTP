@@ -16,22 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `fileshare`
---
-
-DROP TABLE IF EXISTS `fileshare`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `fileshare` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `filepath` varchar(128) DEFAULT NULL,
-  `signdata` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `signdata` (`signdata`)
-) ENGINE=MyISAM AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `ftpserv`
 --
 
@@ -70,7 +54,7 @@ CREATE TABLE `logrecord` (
   `objtext` varchar(255) DEFAULT NULL,
   `objhost` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=391 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=466 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +86,7 @@ CREATE TABLE `sysinfo` (
   `tim` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18788 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=122072 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,9 +112,10 @@ CREATE TABLE `user` (
   `ulratio` smallint(6) DEFAULT '0',
   `dlratio` smallint(6) DEFAULT '0',
   `access` int(1) DEFAULT '0',
+  `power` int(1) DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -142,7 +127,7 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 10:51:55
+-- Dump completed on 2019-10-09 14:39:05
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ftpdb
@@ -167,7 +152,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','','1','192.168','2018-09-26 01:00:06',0,0,0,NULL,'0',0,0,1);
+INSERT INTO `user` VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','','1','192.168','2018-09-26 01:00:06',0,0,0,NULL,'admin',0,0,1,1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -180,7 +165,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 10:51:55
+-- Dump completed on 2019-10-09 14:39:05
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ftpdb
@@ -205,7 +190,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `sysattr` WRITE;
 /*!40000 ALTER TABLE `sysattr` DISABLE KEYS */;
-INSERT INTO `sysattr` VALUES ('resData','{\"ResState\": \"True\", \"visitDay\": \"2\", \"ResInv\": \"60\", \"ResSaveDay\": \"30\"}',1,'sys');
+INSERT INTO `sysattr` VALUES ('resData','{\"ResState\": \"True\", \"visitDay\": \"30\", \"ResInv\": \"60\", \"ResSaveDay\": \"1\"}',1,'sys');
 /*!40000 ALTER TABLE `sysattr` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -218,7 +203,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 10:51:55
+-- Dump completed on 2019-10-09 14:39:05
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ftpdb
@@ -243,7 +228,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `ftpserv` WRITE;
 /*!40000 ALTER TABLE `ftpserv` DISABLE KEYS */;
-INSERT INTO `ftpserv` VALUES (1,1,'*',21,100,50,'/vftp','1100:1100','133:022',1,'60000-60020','*');
+INSERT INTO `ftpserv` VALUES (1,1,'*',2121,100,50,'/vftp','1100:1100','133:022',1,'60000-60020','192.168.60.188');
 /*!40000 ALTER TABLE `ftpserv` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -256,4 +241,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 10:51:55
+-- Dump completed on 2019-10-09 14:39:05
