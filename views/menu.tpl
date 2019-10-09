@@ -69,8 +69,8 @@
                 </li>
             %end
                 <li class="">
-                    <a href="/fileshare">
-                        <span class="menu-text">文件分享</span>
+                    <a href="/fileshare/root">
+                        <span class="menu-text">文件管理</span>
                     </a>
                 </li>
             </ul>
@@ -100,6 +100,14 @@
                 </li>
             </ul>
         </li>
+        <li class="active">
+            <a href="https://github.com/fxtxkktv" target="_bank" class="menu-dropdown">
+                <i class="menu-icon fa fa-address-book-o"></i>
+                <span class="menu-text"> AboutMe </span>
+                <i class="menu-expand"></i>
+            </a>
+       </li>
+    </li>
     </ul>
     <!-- /Sidebar Menu -->
 </div>

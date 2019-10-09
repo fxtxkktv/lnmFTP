@@ -77,6 +77,7 @@ def adduser():
     ulbandwidth = request.forms.get("ulbandwidth")
     dlbandwidth = request.forms.get("dlbandwidth")
     ustatus = request.forms.get("ustatus")
+    power = request.forms.get("power")
     quotasize = request.forms.get("quotasize")
     vdir = request.forms.get("vdir")
     comment = request.forms.get("comment")
@@ -113,8 +114,8 @@ def adduser():
 
     sql = """
             INSERT INTO
-                user(username,password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access)
-            VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                user(username,password,ustatus,power,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access)
+            VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """
     data = (username,md5password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access)
     result = writeDb(sql,data)
@@ -132,6 +133,7 @@ def do_changeuser(id):
     username = request.forms.get("username")
     password = request.forms.get("password")
     ustatus = request.forms.get("ustatus")
+    power   = request.forms.get("power")
     ulbandwidth = request.forms.get("ulbandwidth")
     dlbandwidth = request.forms.get("dlbandwidth")
     ipaccess = request.forms.get("ipaccess")
@@ -143,12 +145,11 @@ def do_changeuser(id):
     #把密码进行加密处理后再保存到数据库中
     if not password :
        sql = "select password from user where id = %s"
-       password = readDb(sql,(id,))[0].get('password')
+       md5password = readDb(sql,(id,))[0].get('password')
     else:
        m = hashlib.md5()
        m.update(password)
        md5password = m.hexdigest()
-
     #处理vdir规范
     if vdir.endswith('/') or vdir.startswith('/'):
        vdir = re.sub('^/','',vdir)
@@ -156,7 +157,7 @@ def do_changeuser(id):
        logging.error(vdir)
 
     #检查表单长度
-    if len(username) < 4 or (len(password) < 8 or len(password) > 16) :
+    if len(username) < 4 or (len(password)>0 and (len(password) < 8 or len(password) > 16)) :
        msg = {'color':'red','message':'用户名或密码长度错误，提交失败!'}
        return '-2'
 
@@ -166,10 +167,10 @@ def do_changeuser(id):
 
     sql = """
             UPDATE user SET
-            username=%s,password=%s,ustatus=%s,ulbandwidth=%s,dlbandwidth=%s,ipaccess=%s,quotasize=%s,vdir=%s,comment=%s,access=%s
+            username=%s,password=%s,ustatus=%s,power=%s,ulbandwidth=%s,dlbandwidth=%s,ipaccess=%s,quotasize=%s,vdir=%s,comment=%s,access=%s
             WHERE id=%s
         """
-    data = (username,md5password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access,id)
+    data = (username,md5password,ustatus,power,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access,id)
     result = writeDb(sql,data)
     if result == True:
        wrtlog('User','更新用户成功:%s' % username,s['username'],s.get('clientip'))
@@ -205,7 +206,7 @@ def deluser():
 @route('/api/getuser',method=['GET', 'POST'])
 @checkAccess
 def getuser():
-    sql = """ SELECT U.id,U.username,U.ustatus,U.ulbandwidth,U.dlbandwidth,U.ipaccess,U.quotasize,U.comment,
+    sql = """ SELECT U.id,U.username,U.ustatus,U.ulbandwidth,U.dlbandwidth,U.ipaccess,U.quotasize,U.comment,U.power,
           concat(D.vdir,'/',U.vdir) as vdir,
           U.vdir as vdirs,
           date_format(adddate,'%%Y-%%m-%%d') as adddate 
@@ -219,7 +220,7 @@ def getuser():
 @route('/api/getadmin',method=['GET', 'POST'])
 @checkAccess
 def getuser():
-    sql = """ SELECT U.id,U.username,U.ustatus,U.ulbandwidth,U.dlbandwidth,U.ipaccess,U.quotasize,U.comment,
+    sql = """ SELECT U.id,U.username,U.ustatus,U.power,U.ulbandwidth,U.dlbandwidth,U.ipaccess,U.quotasize,U.comment,
         concat(D.vdir,'/',U.vdir) as vdir,
         U.vdir as vdirs,
         date_format(adddate,'%%Y-%%m-%%d') as adddate 

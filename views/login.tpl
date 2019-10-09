@@ -17,7 +17,7 @@
     <link href="/assets/css/font-awesome.min.css" rel="stylesheet" />
 
     <!--Fonts-->
-    <link href="/assets/css/google1.css" rel="stylesheet" type="text/css">
+    <!--link href="/assets/css/google1.css" rel="stylesheet" type="text/css"-->
 
     <!--Beyond styles-->
     <link id="beyond-link" href="/assets/css/beyond.min.css" rel="stylesheet" />
@@ -83,7 +83,7 @@
     <script src="/assets/js/beyond.js"></script>
 
     <!--Google Analytics::Demo Only-->
-    <script>
+    <!--script>
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
                 (i[r].q = i[r].q || []).push(arguments)
@@ -94,7 +94,7 @@
         ga('create', 'UA-52103994-1', 'auto');
         ga('send', 'pageview');
 
-    </script>
+    </script-->
     <script>
 	function s(e,a){
         	if ( e && e.preventDefault )

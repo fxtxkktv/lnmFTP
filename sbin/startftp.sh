@@ -9,35 +9,40 @@ if [ ! -f $wkdir/main.py ] ;then
 fi
 PATH=$PATH:$wkdir/sbin
 confdir="$wkdir/plugins/ftpd"
-piddir="$wkdir/plugins/ftpd/run"
+pidfile="$wkdir/plugins/ftpd/ftpd.pid"
+binIpath=$(which pure-config.py)
+#binIIpath=$(which pure-uploadscript)
+
 
 case "$1" in
   start)
         echo -en "Starting FTPServer:\t\t"
-        $wkdir/sbin/start-stop-daemon --start --background --exec $wkdir/sbin/pure-config.py -- $confdir/ftp.conf
+        #$binIIpath -B -r $wkdir/sbin/pureftpd_uploadscript.sh >/dev/null 2>&1 
+        $wkdir/sbin/start-stop-daemon --start --background -m --pidfile $pidfile --exec $wkdir/venv/bin/python -- $binIpath $confdir/ftp.conf
         RETVAL=$?
         #echo
         if [ $RETVAL -eq 0 ] ;then
-	   echo "Done..."
-	else
-	   echo "Failed"
-	fi
+           echo "Done..."
+        else
+           echo "Failed"
+        fi
         ;;
   stop)
-	echo -en "Stoping FTPServer:\t\t"
-	$wkdir/sbin/start-stop-daemon --stop  --name pure-ftpd >/dev/null 2>&1
-	RETVAL=$?
+        echo -en "Stoping FTPServer:\t\t"
+        #killall $binIIpath
+        $wkdir/sbin/start-stop-daemon --stop  --name pure-ftpd >/dev/null 2>&1
+        RETVAL=$?
         #echo
         if [ $RETVAL -eq 0 ] ;then
-	   echo "Done..."
-	else
-	   echo "Failed"
-	fi
+           echo "Done..."
+        else
+           echo "Failed"
+        fi
         ;;
   status)
         for pid in  $( ps ax|grep pure-ftpd |grep -v 'grep'|awk '{print $1}');do
-	   echo $pid
-	done
+            echo $pid
+        done
         ;;
   restart)
         $0 stop

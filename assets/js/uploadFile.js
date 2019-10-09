@@ -18,7 +18,7 @@ function SgyUploadFile ( options ) {
       $.ajax( {
         type:'post',
         typeData:'json',
-        url:'/ulfileshare',
+        url:'/onlyprocesspage',
         data:formData,
         processData:false,  // 不处理数据
         contentType:false,   // 不设置内容类型

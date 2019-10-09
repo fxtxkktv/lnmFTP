@@ -1,12 +1,11 @@
-#!/usr/bin/env python
 #coding=utf-8
 import os,sys,json,re,time,datetime,logging,zipfile,platform
 from bottle import request,route,template,static_file,abort,redirect
 
 from MySQL import writeDb,readDb,readDb2
 from Login import checkLogin,checkAccess
-
-from Functions import AppServer,cmdhandle,writeFTPconf,GetFileMd5,is_chinese,netModule
+from FTP import FTPHandle
+from Functions import AppServer,LoginCls,cmdhandle,writeFTPconf,GetFileMd5,is_chinese,netModule,servchk
 
 import Global as gl
 
@@ -31,7 +30,7 @@ def systeminfo():
     info['pyversion'] = platform.python_version()
     info['memsize'] = cmds.getdictrst('cat /proc/meminfo |grep \'MemTotal\' |awk -F: \'{printf ("%.0fM",$2/1024)}\'|sed \'s/^[ \t]*//g\'').get('result')
     info['cpumode'] = cmds.getdictrst('grep \'model name\' /proc/cpuinfo |uniq |awk -F : \'{print $2}\' |sed \'s/^[ \t]*//g\' |sed \'s/ \+/ /g\'').get('result')
-    info['v4addr'] = 'Lan: '+netmod.NatIP()+'\tWan: '+netmod.NetIP()
+    info['v4addr'] = 'Wan: '+netmod.NetIP()
     info['appversion'] = AppServer().getVersion()
     """管理日志"""
     sql = " SELECT id,objtext,objact,objhost,objtime FROM logrecord order by id DESC limit 7 "
@@ -142,7 +141,9 @@ def addservconf():
     s = request.environ.get('beaker.session')
     sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
     result = readDb(sql,)
-    return template('ftpservconf',session=s,msg={},info=result[0])
+    info=result[0]
+    info['ftpstatus']=servchk(result[0].get('listenport'))
+    return template('ftpservconf',session=s,msg={},info=info)
 
 @route('/ftpservconf',method="POST")
 @checkAccess
@@ -160,11 +161,20 @@ def do_addftpservconf():
     passiveenable = request.forms.get("passiveenable")
     passiveport = request.forms.get("passiveport")
     passiveaddr = request.forms.get("passiveaddr")
-    if ( listenaddr != "*" and netmod.checkmask(listenaddr) == False ) or ( passiveaddr != "*" and netmod.checkip(passiveaddr) == False ) :  
+    if ( listenaddr != "*" and netmod.checkip(listenaddr) == False ) or ( passiveaddr != "*" and netmod.checkip(passiveaddr) == False ) :  
        msg = {'color':'red','message':u'地址填写不合法，保存失败'}
        sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
        result = readDb(sql,)
-       return template('ftpservconf',session=s,msg=msg,info=result[0])
+       info=result[0]
+       info['ftpstatus']=servchk(result[0].get('listenport'))
+       return template('ftpservconf',session=s,msg=msg,info=info)
+    if int(listenport) < 0 or int(listenport) > 65535 :
+       msg = {'color':'red','message':u'端口配置错误，保存失败'}
+       sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
+       result = readDb(sql,)
+       info=result[0]
+       info['ftpstatus']=servchk(result[0].get('listenport'))
+       return template('ftpservconf',session=s,msg=msg,info=info)
     #ftp根路径处理判断
     if vdir.endswith('/'):
        vdir = re.sub('/$','',vdir)
@@ -172,7 +182,9 @@ def do_addftpservconf():
        msg = {'color':'red','message':u'根路径必须绝对路径，保存失败'}
        sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
        result = readDb(sql,)
-       return template('ftpservconf',session=s,msg=msg,info=result[0])
+       info=result[0]
+       info['ftpstatus']=servchk(result[0].get('listenport'))
+       return template('ftpservconf',session=s,msg=msg,info=info)
     sql = " UPDATE ftpserv set authtype=%s,listenaddr=%s,listenport=%s,maxuser=%s,sameipmax=%s,vdir=%s,owninfo=%s,umask=%s,passiveenable=%s,passiveport=%s,passiveaddr=%s where id='1'"
     data = (authtype,listenaddr,listenport,maxclient,sameipmax,vdir,vid,umask,passiveenable,passiveport,passiveaddr)
     result = writeDb(sql,data)
@@ -181,12 +193,25 @@ def do_addftpservconf():
        sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
        result = readDb(sql,)
        writeFTPconf(action='uptconf')
-       return template('ftpservconf',session=s,msg=msg,info=result[0])
+       info=result[0]
+       time.sleep(1) #防止检测FTP服务状态时异常
+       info['ftpstatus']=servchk(result[0].get('listenport'))
+       return template('ftpservconf',session=s,msg=msg,info=info)
     else :
        msg = {'color':'red','message':u'配置保存失败'}
        sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,dir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
        result = readDb(sql,)
-       return template('ftpservconf',session=s,msg=msg,info=result[0])
+       info=result[0]
+       info['ftpstatus']=servchk(result[0].get('listenport'))
+       return template('ftpservconf',session=s,msg=msg,info=info)
+
+@route('/showlog')
+@checkAccess
+def showservlog():
+    """显示日志项"""
+    s = request.environ.get('beaker.session')
+    result = cmds.getdictrst('tail -300 %s/ftpd/ftpd.log|awk \'{$4="";print $0}\'' % gl.get_value('plgdir'))
+    return template('showlog',session=s,msg={},info=result)
 
 @route('/syscheck')
 @checkAccess
@@ -215,7 +240,6 @@ def syscheck():
     s = request.environ.get('beaker.session')
     return template('uploadfile',session=s,msg={})
 
-
 @route('/uploadfile', method='POST')
 @checkAccess
 def do_upload():
@@ -234,129 +258,129 @@ def do_upload():
         msg = {'color':'red','message':u'文件上传失败'}
         return template('backupset',session=s,msg=msg)
 
-
-@route('/fileshare')
+@route('/fileshare/<path>')
 @checkLogin
-def fileshare():
+def fileshare(path):
     s = request.environ.get('beaker.session')
-    urladdr = dict()
-    # 判断配置文件中url是否合规,合规才提交到界面替换默认url
-    pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-    result = re.match(pattern,AppServer().getConfValue('fileshare','urladdr'))
-    if str(result) == 'None':
-       urladdr['url']="1"
+    # 获取FTP目录列表
+    ftpuser = s['username']
+    ftppass=LoginCls().decode(AppServer().getConfValue('keys','pkey'),s['skeyid'])
+    sql = """ select listenaddr,listenport,passiveenable,passiveaddr from ftpserv """
+    result = readDb(sql,)
+    if int(result[0].get('passiveenable')) == 0:
+       if result[0].get('listenaddr') == "*":
+          servaddr="127.0.0.1"
+       else:
+          servaddr=result[0].get('listenaddr')
     else:
-       urladdr['url'] = AppServer().getConfValue('fileshare','urladdr')
-    return template('fileshare',session=s,msg={},urladdr=urladdr)
+       servaddr=result[0].get('passiveaddr')
+    try:
+       ftp = FTPHandle(servaddr,int(result[0].get('listenport')),'0','1')
+    except:
+       newflist=[]
+       msg={'color':'red','message':u'FTP服务连接失败,请检查FTP配置'}
+       return template('fileshare',session=s,msg=msg,path=path,ftpdirs=[])
+    ftp.Login(ftpuser,ftppass)
+    flistdict=ftp.getdirs()
+    #print flistdict.get('dirs')
+    ftp.close()
+    return template('fileshare',session=s,msg={},path=path,ftpdirs=flistdict.get('dirs'))
 
-@route('/api/getfileshareinfo',method=['GET', 'POST'])
+@route('/api/getfileshareinfo/<path>',method=['GET', 'POST'])
 @checkLogin
-def getfileshareinfo():
+def getfileshareinfo(path):
     import chardet
+    from MySQL import readDb
     s = request.environ.get('beaker.session')
-    username = s['username']
-    sql = " SELECT concat(D.vdir,'/',U.vdir) as vdir FROM user as U LEFT OUTER JOIN ftpserv as D ON D.id='1' WHERE U.username=%s "
-    ownftpdir = readDb(sql,(username,))[0].get('vdir')
-    info=[]
-    status,result=cmds.gettuplerst('find %s -name \'*.*\' -exec basename {} \;|sort -u' % ownftpdir)
-    for i in result.split():
-        if str(i) != "":
-           infos={}
-           charstr=chardet.detect(str(i)).get('encoding')
-           if str(charstr).lower() != "utf-8" :
-              #print str(charstr).lower()
-              try:
-                 infos['filename']=i.decode(str(charstr)).encode('utf-8')
-              except:
-                 continue
-              ownftpdir = ownftpdir.encode(str(charstr)).encode('utf-8')
-              filepath = '%s/%s' % (ownftpdir.encode(charstr),i)
-              nfilepath = filepath.decode(charstr).encode('utf-8')
-           else:
-              infos['filename']=i
-              filepath = '%s/%s' % (ownftpdir,i)
-              nfilepath = filepath
-           #if chardet.detect(i).get('encoding')=="GB2312":
-           #   infos['filename']=i.decode('GB2312')
-           #   ownftpdir = ownftpdir.encode('GB2312')
-           #   filepath = '%s/%s' % (ownftpdir.encode('GB2312'),i)
-           #   nfilepath = filepath.decode('gb2312').encode('utf-8')
-           #else:
-           #   infos['filename']=i
-           #   filepath = '%s/%s' % (ownftpdir,i)
-           #   nfilepath = filepath
-           if os.path.isfile(filepath) == False:
+    ftpuser = s['username']
+    ftppass=LoginCls().decode(AppServer().getConfValue('keys','pkey'),s['skeyid'])
+    sql = """ select listenaddr,listenport,passiveenable,passiveaddr from ftpserv """
+    result = readDb(sql,)
+    if int(result[0].get('passiveenable')) == 0:
+       if result[0].get('listenaddr') == "*":
+          servaddr="127.0.0.1"
+       else:
+          servaddr=result[0].get('listenaddr')
+    else:
+       servaddr=result[0].get('passiveaddr')
+    try:
+       ftp = FTPHandle(servaddr,int(result[0].get('listenport')),'0','1')
+    except:
+       newflist=[]
+       return json.dumps(newflist)
+    ftp.Login(ftpuser,ftppass)
+    if path == 'root':
+       flistdict=ftp.getdirs()
+    else:
+       charstr=chardet.detect(path).get('encoding')
+       if str(charstr).lower() != "gbk" :
+          try:
+            path=path.decode('utf-8').encode('gbk')
+          except:
+            path=path
+       flistdict=ftp.getdirs(path)
+    ftp.close()
+    newflist=[]
+    for i in flistdict.get('files'):
+        charstr=chardet.detect(i.get('name')).get('encoding')
+        if str(charstr).lower() != "utf-8" :
+           try:
+              i['name']=i.get('name').decode('gbk').encode('utf-8')
+              newflist.append(i)
+           except:
               continue
-           infos['filesize']=os.path.getsize(filepath)
-           cctime=os.path.getctime(filepath)
-           infos['filetime']=time.strftime('%Y%m%d%H%M%S',time.localtime(cctime))
-        infos['signdata']=GetFileMd5(filepath)
-        sql = " INSERT INTO fileshare (filepath, signdata) VALUES (%s , %s) ON DUPLICATE KEY UPDATE filepath=%s,signdata=%s "
-        data = (nfilepath,infos['signdata'],nfilepath,infos['signdata'])
-        try:
-           writeDb(sql,data)
-        except :
-           True
-        info.append(infos)
-    return json.dumps(info)
+        else:
+           newflist.append(i)
+    return json.dumps(newflist)
 
-@route('/ulfileshare')
-@checkLogin
-def syscheck():
-    s = request.environ.get('beaker.session')
-    return template('ulfileshare',session=s)
-
-@route('/ulfileshare', method='POST')
+@route('/addfileshare', method='POST')
 @checkLogin
 def do_upload():
     import chardet
     s = request.environ.get('beaker.session')
-    urladdr = dict()
-    # 判断配置文件中url是否合规,合规才提交到界面替换默认url
-    pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-    result = re.match(pattern,AppServer().getConfValue('fileshare','urladdr'))
-    if str(result) == 'None':
-       urladdr['url']="1"
+    dstdir = request.forms.get('dstdir')
+    charstr=chardet.detect(dstdir).get('encoding')
+    if str(charstr).lower() != "gbk" :
+       try:
+          dstdir=dstdir.decode('utf-8').encode('gbk')
+       except:
+          dstdir=dstdir
+    ftpuser=s['username']
+    ftppass=LoginCls().decode(AppServer().getConfValue('keys','pkey'),s['skeyid'])
+    sql = """ select listenaddr,listenport,passiveenable,passiveaddr from ftpserv """
+    result = readDb(sql,)
+    if int(result[0].get('passiveenable')) == 0:
+       if result[0].get('listenaddr') == "*":
+          servaddr="127.0.0.1"
+       else:
+          servaddr=result[0].get('listenaddr')
     else:
-       urladdr['url'] = AppServer().getConfValue('fileshare','urladdr')
-    username = s['username']
-    sql = " SELECT concat(D.vdir,'/',U.vdir) as vdir FROM user as U LEFT OUTER JOIN ftpserv as D ON D.id='1' WHERE U.username=%s "
-    ownftpdir = readDb(sql,(username,))[0].get('vdir')
-    upload = request.files.get('cv')
-    #为了兼容ftp显示字符，UTF8字符文件名转换为GB2312
-    if is_chinese(upload.filename) == True:
-       ownftpdir = ownftpdir.encode('GB2312','ignore')
-       filename=str(upload.filename).encode('GB2312','ignore')
-    else:
-       filename = str(upload.filename)
-       #取消判断文件格式，由JS判断
-       #name, ext = os.path.splitext(upload.filename)
-       #if ext not in ('.rar','.zip','.bin','.tar','.tgz','.tar.gz','.doc','.docx','.xls','.xlsx','.ppt','.pptx'):
-       #        msg = {'color':'red','message':u'文件格式不被允许.请重新上传'}
-       #        return template('fileshare',session=s,msg=msg,urladdr=urladdr)
-    cmds.gettuplerst('%s/sbin/mkdir -p %s && chown vftp:vftp %s' % (gl.get_value('wkdir'),ownftpdir,ownftpdir))
+       servaddr=result[0].get('passiveaddr')
     try:
-       upload.save('%s/%s' % (ownftpdir,filename))
-       cmds.getdictrst('chown vftp:vftp %s/%s' % (ownftpdir,filename))
-       msg = {'color':'green','message':u'文件上传成功'}
-       return template('fileshare',session=s,msg=msg,urladdr=urladdr)
+       ftp = FTPHandle(servaddr,int(result[0].get('listenport')),'0','1')
     except:
-       msg = {'color':'red','message':u'文件上传失败'}
-       return template('fileshare',session=s,msg=msg,urladdr=urladdr)
-
-@route('/filesharesign/<signdata>')
-def filesharesign(signdata):
-    sql = " SELECT filepath from fileshare where signdata=%s "
-    if signdata == "" :
-       return abort(404)
-    download_path = readDb(sql,(signdata,))[0].get('filepath')
-    filename = os.path.basename(download_path)
-    if is_chinese(filename) == True:
-       filename = filename.encode('GB2312')
-       filedir  = os.path.dirname(download_path).encode('GB2312')
-    else :
-        filedir  = os.path.dirname(download_path)
-    return static_file(filename, root=filedir, download=filename)
+       return -1
+    fname = request.forms.get('fname')
+    if fname:
+       charstr=chardet.detect(fname).get('encoding')
+       if str(charstr).lower() != "gbk" :
+          try:
+              fname=fname.decode('utf-8').encode('gbk')
+          except:
+              pass
+       os.system('rm -f /tmp/%s_ftpfile' % ftpuser)
+       softfile = request.POST.get('fdesc')
+       softfile.save('/tmp/%s_ftpfile' % ftpuser, overwrite=True)
+       try:
+         ftp.Login(ftpuser,ftppass)
+         ftp.UpLoadFile("/tmp/%s_ftpfile" % ftpuser, fname, dstdir )
+         ftp.close()
+       except:
+         return -1
+       os.system('rm -f /tmp/%s_ftpfile' % ftpuser)
+       return 0
+    else:
+       return -1
 
 @route('/startbackupset')
 @checkAccess
@@ -379,7 +403,6 @@ def download(vdir,filename):
     if vdir == 'backupset':
        download_path = '%s/backupset' % gl.get_value('plgdir')
     return static_file(filename, root=download_path, download=filename)
-
 
 @route('/restore/<filename>')
 @checkAccess

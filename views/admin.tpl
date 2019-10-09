@@ -63,25 +63,32 @@
                   <label class="control-label" for="inputSuccess1">密码：</label>
                   <input type="password" class="form-control" id="password" name="password" placeholder="由字母、数字组成、符号，至少8位以上" require>
                 </div>
-		<div class="form-group">
+                <div class="form-group">
                   <label class="control-label" for="inputSuccess1">允许IP：</label>
                   <input type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" id="ipaccess" name="ipaccess">
                 </div>
-		<div class="form-group">
+                <div class="form-group">
                   <label class="control-label" for="inputSuccess1">上传速率：</label>
                   <input type="text" class="form-control" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" id="ulbandwidth" name="ulbandwidth">
                 </div>
-		<div class="form-group">
+                <div class="form-group">
                   <label class="control-label" for="inputSuccess1">下载速率：</label>
                   <input type="text" class="form-control" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" id="dlbandwidth" name="dlbandwidth">
                 </div>
-		<div class="form-group">
+                <div class="form-group">
                   <label class="control-label" for="inputSuccess1">空间大小：</label>
                   <input type="text" class="form-control" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" id="quotasize" name="quotasize">
                 </div>
-		<div class="form-group">
+                <div class="form-group">
                   <label class="control-label" for="inputSuccess1">用户路径：</label>
                   <input type="text" class="form-control" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" id="vdir" name="vdir">
+                </div>
+                <div class="form-group">
+                  <label class="control-label" for="inputSuccess1">用户权限：</label>
+                  <select id="power" style="width:100%;" name="power">
+                    <option value='1'>可读写</option>
+                    <option value='0'>仅读取</option>
+                 </select>
                 </div>
                 <div class="form-group">
                   <label class="control-label" for="inputSuccess1">用户状态：</label>
@@ -89,16 +96,16 @@
                     <option value='1'>启用</option>
                     <option value='0'>禁用</option>
                  </select>
-		</div>
-		<div class="form-group">
+               </div>
+               <div class="form-group">
                   <label class="control-label" for="inputSuccess1">备注信息：</label>
                   <textarea id="comment" name="comment" style="height:70px;width:100%;" ></textarea>
-                </div>
-		<div class="form-group">
+              </div>
+              <div class="form-group">
                   <input type="hidden" id="hidInput" value="">
                   <button type="button" id="subBtn" class="btn btn-primary  btn-sm">提交</button>
                   <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">关闭</button>
-	       </div>
+              </div>
             </form>
             </div>
          </div>
@@ -107,9 +114,7 @@
 </div>
 <script type="text/javascript">
 $(function(){
-    /**
-    *表格数据
-    */
+    /* **表格数据 */
     var editId;        //定义全局操作数据变量
     var isEdit;
     $('#myLoadTable').bootstrapTable({
@@ -164,43 +169,58 @@ $(function(){
               title: '上传速率',
               align: 'center',
               valign: 'middle',
+              visible: false,
               sortable: false
           },{
               field: 'dlbandwidth',
               title: '下载速率',
               align: 'center',
               valign: 'middle',
+              visible: false,
               sortable: false
-	  },{
+          },{
+              field: 'power',
+              title: '用户权限',
+              align: 'center',
+              valign: 'middle',
+              sortable: false,
+              formatter: function(value,row,index){
+                        if( value == '1' ){
+                                return '可读写';
+                        }else{  return '仅读取';
+                        }
+             }
+          },{
               field: 'vdir',
               title: '用户路径',
               align: 'center',
               valign: 'middle',
               sortable: false
           },{
-	      field: 'comment',
+              field: 'comment',
               title: '备注信息',
               align: 'center',
               valign: 'middle',
               sortable: false
-	  },{
+          },{
               field: 'adddate',
               title: '创建日期',
               align: 'center',
               valign: 'middle',
+              visible: false,
               sortable: false
-	  },{
+          },{
               field: 'ustatus',
               title: '状态',
               align: 'center',
               valign: 'middle',
               sortable: false,
-	      formatter: function(value,row,index){
+              formatter: function(value,row,index){
                         if( value == '1' ){
                                 return '有效';
                         }else{  return '禁用';
                         }
-            }
+              }
           }]
       });
 
@@ -242,17 +262,18 @@ $(function(){
                 $('#username').val(result[0]['username']);
                 $('#passwd').val(result[0]['passwd']);
                 $('#ustatus').val(result[0]['ustatus']);
-		$('#ulbandwidth').val(result[0]['ulbandwidth']);
+                $('#power').val(result[0]['power']);
+                $('#ulbandwidth').val(result[0]['ulbandwidth']);
                 $('#dlbandwidth').val(result[0]['dlbandwidth']);
                 $('#ipaccess').val(result[0]['ipaccess']);
-		$('#quotasize').val(result[0]['quotasize']);
-		$('#vdir').val(result[0]['vdirs']); 
-		$('#comment').val(result[0]['comment']);
+                $('#quotasize').val(result[0]['quotasize']);
+                $('#vdir').val(result[0]['vdirs']); //读取用户路径，不包含主目录vdir路径
+                $('#comment').val(result[0]['comment']);
                 $('#modalTitle').html('修改用户');     //头部修改
                 $('#hidInput').val('1');            //修改标志
                 $('#myModal').modal('show');
                 editId = result[0]['id'];
-		isEdit = 1;
+                isEdit = 1;
     		}
         });
 
@@ -263,13 +284,14 @@ $(function(){
            var username = $('#username').val();
            var password = $('#password').val();
            var ustatus = $('#ustatus').val();
+           var power = $('#power').val();
            var ipaccess = $('#ipaccess').val(); 
            var ulbandwidth = $('#ulbandwidth').val(); 
            var dlbandwidth = $('#dlbandwidth').val(); 
-	   var quotasize = $('#quotasize').val(); 
+           var quotasize = $('#quotasize').val(); 
            var vdir = $('#vdir').val(); 
            var comment = $('#comment').val();
-	   var access = "1";
+           var access = "1";
            var postUrl;
            if(isEdit==1){
                 postUrl = "/changeuser/"+editId;           //修改路径
@@ -277,16 +299,16 @@ $(function(){
                 postUrl = "/adduser";          //添加路径
            }
 
-           $.post(postUrl,{username:username,password:password,ustatus:ustatus,ipaccess:ipaccess,ulbandwidth:ulbandwidth,dlbandwidth:dlbandwidth,quotasize:quotasize,vdir:vdir,comment:comment,access:access},function(data){
+           $.post(postUrl,{username:username,password:password,ustatus:ustatus,ipaccess:ipaccess,ulbandwidth:ulbandwidth,dlbandwidth:dlbandwidth,quotasize:quotasize,vdir:vdir,comment:comment,access:access,power:power},function(data){
                   if(data==0){
                     $('#myModal').modal('hide');
                     $('#myLoadTable').bootstrapTable('refresh');
-		    //alert("操作成功,");
+                    //alert("操作成功,");
                     message.message_show(200,200,'成功','操作成功');   
                   }else if(data==-1){
                       message.message_show(200,200,'失败','操作失败');
                   }else{
-                        console.log(data);return false;
+                      message.message_show(200,200,'添加失败','表单数据填写错误(用户名长度、密码长度等)');return false;
                 }
             },'html');
        });

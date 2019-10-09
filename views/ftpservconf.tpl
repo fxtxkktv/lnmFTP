@@ -20,11 +20,23 @@
                     
                 </div><!--Widget Header-->
                 <div style="padding:-10px 0px;" class="widget-body no-padding">
-                  <form action="" method="post">
-		    %if msg.get('message'):
-                            <span style="color:{{msg.get('color','')}};font-weight:bold;">&emsp;{{msg.get('message','')}}</span>
-                    %end
-		    <div class="modal-body">
+                <form action="" method="post">
+		        %if msg.get('message'):
+                    <span style="color:{{msg.get('color','')}};font-weight:bold;">&emsp;{{msg.get('message','')}}</span>
+                %end
+                <div class="modal-body">
+                <div class="input-group">
+                   <span class="input-group-addon" style="width:100px">FTP服务状态</span>
+                   %if info.get('ftpstatus','') == 0 :
+                    <input type="text" style="width:200px;color:green;font-weight:bold;" class="form-control" id="" name="record" aria-describedby="inputGroupSuccess4Status" value="正在运行" readonly>
+                   %else :
+                    <input type="text" style="width:200px;color:red;font-weight:bold;" class="form-control" id="" name="record" aria-describedby="inputGroupSuccess4Status" value="服务关闭" readonly>
+                   %end
+                   <!--span class="input-group-addon" style="width:100px">服务日志</span-->
+                   <a style="width:205px;" class="form-control" href='/showlog'><font color="red">查看FTP服务日志</font></a>
+                  </div>
+                </div>
+		        <div class="modal-body">
                         <div class="input-group">
                            <span class="input-group-addon">验证方式&emsp;</span>
                            <select style="width:420px" class="form-control" name="authtype">
@@ -52,7 +64,7 @@
 		    <div class="modal-body">
                         <div class="input-group">
                           <span class="input-group-addon">监听信息&emsp;</span>
-			  <input type="text" style="width:210px" class="form-control" id="" name="listenaddr" placeholder="IP地址" aria-describedby="inputGroupSuccess4Status"
+			  <input type="text" style="width:210px" class="form-control" id="" name="listenaddr" onkeyup="this.value=this.value.replace(/[^\d.*,/]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.*,/]/g,'')" placeholder="IP地址" aria-describedby="inputGroupSuccess4Status"
 			   %if info.get('listenaddr',''): 
                                 value="{{info.get('listenaddr','')}}"
                            %else :
@@ -65,9 +77,9 @@
 			   %else :
 				value="21"
 			   %end 
-			   readonly>
-                        </div>
-                    </div>
+			   >
+              </div>
+            </div>
 		    <div class="modal-body">
                         <div class="input-group">
                           <span class="input-group-addon">连接控制&emsp;</span>

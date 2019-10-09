@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #coding=utf-8
 import os,sys,json,re,logging
 from bottle import request,route,error,run,default_app

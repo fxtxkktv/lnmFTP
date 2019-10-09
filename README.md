@@ -1,4 +1,4 @@
-# 该项目应用于企业FTP协议存储、文件外发、支持SSL+密码认证配置功能
+# 该项目应用于企业FTP管理系统、支持SSL+密码认证多种配置功能
 ### 客户端下载：https://pan.baidu.com/s/1xDAfspJdBEm9ilipT61PbQ 分享密码:vzfn
 
 ## 安装步骤(仅针对centos/redhat发行版,其他版本自行测试)
@@ -42,7 +42,7 @@ pip install -r readme/requirements.txt <br>
 ![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/systeminfo.jpg)
 ### FTP服务
 ![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/ftpserv.jpg)
-### 文件分享
+### 文件管理
 ![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/fileshare.jpg)
 ### 帮助页面
 ![其余界面](https://github.com/fxtxkktv/lnmFTP/blob/master/readme/help.jpg)
