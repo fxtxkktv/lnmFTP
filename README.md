@@ -5,19 +5,23 @@
 
 1. 安装初始化环境 python >=2.7 (推荐lnmos定制版本,可以在"客户端下载"中获取) <br>
 rpm -i python27-2.7.15-lnmos.x86_64.rpm <br>
-export PATH=$PATH:/usr/local/python27/bin <br>
+export PATH=$PATH:/opt/Py27lnmos/bin/ <br>
 安装pip工具 <br>
 wget https://bootstrap.pypa.io/get-pip.py <br>
-python27 get-pip.py <br>
+python2.7 get-pip.py <br>
+获取程序代码 <br>
+git clone https://github.com/fxtxkktv/lnmFTP.git <br>
+进入程序目录 <br>
+cd lnmFTP <br>
 安装virtualenv组件[使程序运行环境和系统环境分离] <br>
-pip install virtualenv <br> 
-virtualenv -p /usr/local/python27/bin/python --no-site-packages venv <br>
+pip2.7 install virtualenv <br> 
+virtualenv -p /opt/Py27lnmos/bin/python --no-site-packages venv <br>
 进入virtualenv环境 <br>
 source venv/bin/activate <br>
 
 2. 安装程序运行模块 <br>
 MySQL服务 <br>
-yum install -y mysql-server mysql-devel MySQL-Python <br>
+yum install -y gcc mysql-server mysql-devel MySQL-Python <br>
 FTP服务: [安装lnmOS定制RPM包,可在客户端下载中获取] <br>
 rpm -i pure-ftpd-1.0.46-lnmos.x86_64.rpm <br>
 安装Python程序扩展包 <br>

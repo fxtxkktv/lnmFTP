@@ -161,13 +161,29 @@ def do_addftpservconf():
     passiveenable = request.forms.get("passiveenable")
     passiveport = request.forms.get("passiveport")
     passiveaddr = request.forms.get("passiveaddr")
-    if ( listenaddr != "*" and netmod.checkip(listenaddr) == False ) or ( passiveaddr != "*" and netmod.checkip(passiveaddr) == False ) :  
+    if listenaddr != "*" and netmod.checkip(listenaddr) == False :  
        msg = {'color':'red','message':u'地址填写不合法，保存失败'}
        sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
        result = readDb(sql,)
        info=result[0]
        info['ftpstatus']=servchk(result[0].get('listenport'))
        return template('ftpservconf',session=s,msg=msg,info=info)
+    for port in passiveport.split('-') :
+        if netmod.is_port(port) == False or passiveport.split('-')[0] >= passiveport.split('-')[1]:
+           msg = {'color':'red','message':u'端口填写不合法，保存失败'}
+           sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
+           result = readDb(sql,)
+           info=result[0]
+           info['ftpstatus']=servchk(result[0].get('listenport'))
+           return template('ftpservconf',session=s,msg=msg,info=info) 
+    for ipaddr in passiveaddr.split(','):
+        if ipaddr != "*" and netmod.checkip(ipaddr) == False :
+           msg = {'color':'red','message':u'地址填写不合法，保存失败'}
+           sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
+           result = readDb(sql,)
+           info=result[0]
+           info['ftpstatus']=servchk(result[0].get('listenport'))
+           return template('ftpservconf',session=s,msg=msg,info=info) 
     if int(listenport) < 0 or int(listenport) > 65535 :
        msg = {'color':'red','message':u'端口配置错误，保存失败'}
        sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"

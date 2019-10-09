@@ -112,15 +112,15 @@
                           <input type="text" style="width:105px" class="form-control" id="" name="vid" placeholder="用户ID:组ID" aria-describedby="inputGroupSuccess4Status" 
                           %if info.get('maxclient',''): 
                                 value="{{info.get('vid','')}}"
-			  %else :
+                          %else :
                                 value="1100:1100"
                           %end 
                           readonly>
                           <input type="text" style="width:105px" class="form-control" id="" name="umask" placeholder="新建权限" aria-describedby="inputGroupSuccess4Status"
                           %if info.get('maxuser',''): 
                                 value="{{info.get('umask','')}}"
-			  %else :
-				value="133:022"
+                          %else :
+                                value="133:022"
                           %end 
                           readonly>
                        </div>
@@ -142,20 +142,20 @@
                                         value="0">关闭
                                 </option>
 			   </select>
-			   <input type="text" style="width:105px" class="form-control" id="passiveport" name="passiveport" placeholder="被动模式端口" aria-describedby="inputGroupSuccess4Status"
-			   %if info.get('passiveport',''): 
+			   <input type="text" style="width:105px" class="form-control" id="passiveport" name="passiveport" onkeyup="this.value=this.value.replace(/[^\d-/]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d-/]/g,'')" placeholder="被动模式端口" aria-describedby="inputGroupSuccess4Status"
+               %if info.get('passiveport',''): 
                                 value="{{info.get('passiveport','')}}"
 			   %else :
                                 value="60000-60020"
-                           %end 
-                           readonly>
-			   <input type="text" style="width:105px" class="form-control" id="passiveaddr" name="passiveaddr" placeholder="被动模式IP" aria-describedby="inputGroupSuccess4Status"
-			   %if info.get('passiveaddr',''): 
+               %end 
+               >
+			   <input type="text" style="width:105px" class="form-control" id="passiveaddr" name="passiveaddr" onkeyup="this.value=this.value.replace(/[^\d.*,/]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.*,/]/g,'')" placeholder="被动模式IP" aria-describedby="inputGroupSuccess4Status"
+               %if info.get('passiveaddr',''): 
                                 value="{{info.get('passiveaddr','')}}"
-			   %else :
+               %else :
                                 value="*"
-                           %end 
-                           >
+               %end 
+                >
 		    	</div>
 		    </div>
                     <div class="modal-footer">

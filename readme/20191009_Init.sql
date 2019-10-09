@@ -34,7 +34,7 @@ CREATE TABLE `ftpserv` (
   `umask` varchar(7) DEFAULT NULL,
   `passiveenable` int(1) DEFAULT NULL,
   `passiveport` varchar(11) DEFAULT NULL,
-  `passiveaddr` varchar(15) DEFAULT NULL,
+  `passiveaddr` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -54,7 +54,7 @@ CREATE TABLE `logrecord` (
   `objtext` varchar(255) DEFAULT NULL,
   `objhost` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=466 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=467 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,7 +86,7 @@ CREATE TABLE `sysinfo` (
   `tim` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=122072 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=122348 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +127,7 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-09 14:39:05
+-- Dump completed on 2019-10-09 19:29:58
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ftpdb
@@ -165,7 +165,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-09 14:39:05
+-- Dump completed on 2019-10-09 19:29:58
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ftpdb
@@ -203,7 +203,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-09 14:39:05
+-- Dump completed on 2019-10-09 19:29:58
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ftpdb
@@ -228,7 +228,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `ftpserv` WRITE;
 /*!40000 ALTER TABLE `ftpserv` DISABLE KEYS */;
-INSERT INTO `ftpserv` VALUES (1,1,'*',2121,100,50,'/vftp','1100:1100','133:022',1,'60000-60020','192.168.60.188');
+INSERT INTO `ftpserv` VALUES (1,1,'*',2121,100,50,'/vftp','1100:1100','133:022',1,'60000-60020','*');
 /*!40000 ALTER TABLE `ftpserv` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -241,4 +241,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-09 14:39:05
+-- Dump completed on 2019-10-09 19:29:58
