@@ -63,6 +63,11 @@
                     </a>
                 </li>
                 <li class="">
+                    <a href="/onlineusers">
+                        <span class="menu-text">在线用户</span>
+                    </a>
+                </li>
+                <li class="">
                     <a href="/user">
                         <span class="menu-text">用户管理</span>
                     </a>

@@ -161,7 +161,7 @@ def do_addftpservconf():
     passiveenable = request.forms.get("passiveenable")
     passiveport = request.forms.get("passiveport")
     passiveaddr = request.forms.get("passiveaddr")
-    if listenaddr != "*" and netmod.checkip(listenaddr) == False :  
+    if (listenaddr != "*" and netmod.checkip(listenaddr) == False) or ( passiveaddr != "*" and netmod.checkip(passiveaddr) == False ) :  
        msg = {'color':'red','message':u'地址填写不合法，保存失败'}
        sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
        result = readDb(sql,)
@@ -171,14 +171,6 @@ def do_addftpservconf():
     for port in passiveport.split('-') :
         if netmod.is_port(port) == False or passiveport.split('-')[0] >= passiveport.split('-')[1]:
            msg = {'color':'red','message':u'端口填写不合法，保存失败'}
-           sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
-           result = readDb(sql,)
-           info=result[0]
-           info['ftpstatus']=servchk(result[0].get('listenport'))
-           return template('ftpservconf',session=s,msg=msg,info=info) 
-    for ipaddr in passiveaddr.split(','):
-        if ipaddr != "*" and netmod.checkip(ipaddr) == False :
-           msg = {'color':'red','message':u'地址填写不合法，保存失败'}
            sql = " select id,authtype,listenaddr,listenport,maxuser,sameipmax,vdir,owninfo,umask,passiveenable,passiveport,passiveaddr from ftpserv where id='1'"
            result = readDb(sql,)
            info=result[0]
@@ -228,6 +220,13 @@ def showservlog():
     s = request.environ.get('beaker.session')
     result = cmds.getdictrst('tail -300 %s/ftpd/ftpd.log|awk \'{$4="";print $0}\'' % gl.get_value('plgdir'))
     return template('showlog',session=s,msg={},info=result)
+
+@route('/onlineusers')
+@checkAccess
+def showservlog():
+    """显示日志项"""
+    s = request.environ.get('beaker.session')
+    return template('onlineuser',session=s,msg={})
 
 @route('/syscheck')
 @checkAccess
@@ -365,13 +364,13 @@ def do_upload():
     ftppass=LoginCls().decode(AppServer().getConfValue('keys','pkey'),s['skeyid'])
     sql = """ select listenaddr,listenport,passiveenable,passiveaddr from ftpserv """
     result = readDb(sql,)
-    if int(result[0].get('passiveenable')) == 0:
-       if result[0].get('listenaddr') == "*":
-          servaddr="127.0.0.1"
-       else:
-          servaddr=result[0].get('listenaddr')
+    #if int(result[0].get('passiveenable')) == 0:
+    if result[0].get('listenaddr') == "*":
+       servaddr="127.0.0.1"
     else:
-       servaddr=result[0].get('passiveaddr')
+       servaddr=result[0].get('listenaddr')
+    #else:
+    #   servaddr=result[0].get('passiveaddr')
     try:
        ftp = FTPHandle(servaddr,int(result[0].get('listenport')),'0','1')
     except:
@@ -466,6 +465,32 @@ def getbackupsetinfo():
            infos['filetime']=time.strftime('%Y%m%d%H%M%S',time.localtime(cctime))
            info.append(infos)
     return json.dumps(info)
+
+@route('/api/getonlineusers',method=['GET', 'POST'])
+@checkAccess
+def getonlineusers():
+    info=[]
+    status,result=cmds.gettuplerst('pure-ftpwho -H -n -s')
+    for i in result.split('\n'):
+        if str(i) != "" and len(i.split('|')) > 5:
+           infos={}
+           infos['spid']=i.split('|')[0]
+           infos['username']=i.split('|')[1]
+           infos['ctime']=int(int(i.split('|')[2])/60)
+           infos['remoteaddr']=i.split('|')[5]
+           info.append(infos)
+    return json.dumps(info)
+
+@route('/disconn/<spid>')
+@checkAccess
+def disconn(spid):
+    s = request.environ.get('beaker.session')
+    x,y=cmds.gettuplerst('kill -9 %s' % (spid))
+    if x == 0:
+          msg = {'color':'green','message':u'强制中断完成'}
+    else:
+          msg = {'color':'red','message':u'中断失败请重试'}
+    return template('onlineuser',session=s,msg=msg)
 
 if __name__ == '__main__' :
    sys.exit()

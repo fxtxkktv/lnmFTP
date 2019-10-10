@@ -117,7 +117,7 @@ def adduser():
                 user(username,password,ustatus,power,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access)
             VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """
-    data = (username,md5password,ustatus,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access)
+    data = (username,md5password,ustatus,power,ulbandwidth,dlbandwidth,ipaccess,quotasize,vdir,comment,access)
     result = writeDb(sql,data)
     if result:
        wrtlog('User','新增用户成功:%s' % username,s['username'],s.get('clientip'))
@@ -155,6 +155,15 @@ def do_changeuser(id):
        vdir = re.sub('^/','',vdir)
        vdir = re.sub('/$','',vdir)
        logging.error(vdir)
+    #处理默认值
+    if ulbandwidth == "":
+       ulbandwidth = 0
+    if dlbandwidth == "":
+       dlbandwidth = 0
+    if ipaccess == "":
+       ipaccess = '*'
+    if quotasize == "":
+       quotasize = 0
 
     #检查表单长度
     if len(username) < 4 or (len(password)>0 and (len(password) < 8 or len(password) > 16)) :
