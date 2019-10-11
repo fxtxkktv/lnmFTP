@@ -364,13 +364,13 @@ def do_upload():
     ftppass=LoginCls().decode(AppServer().getConfValue('keys','pkey'),s['skeyid'])
     sql = """ select listenaddr,listenport,passiveenable,passiveaddr from ftpserv """
     result = readDb(sql,)
-    #if int(result[0].get('passiveenable')) == 0:
-    if result[0].get('listenaddr') == "*":
-       servaddr="127.0.0.1"
+    if int(result[0].get('passiveenable')) == 0:
+       if result[0].get('listenaddr') == "*":
+          servaddr="127.0.0.1"
+       else:
+          servaddr=result[0].get('listenaddr')
     else:
-       servaddr=result[0].get('listenaddr')
-    #else:
-    #   servaddr=result[0].get('passiveaddr')
+       servaddr=result[0].get('passiveaddr')
     try:
        ftp = FTPHandle(servaddr,int(result[0].get('listenport')),'0','1')
     except:
