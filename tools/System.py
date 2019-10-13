@@ -288,16 +288,23 @@ def fileshare(path):
        else:
           servaddr=result[0].get('listenaddr')
     else:
-       servaddr=result[0].get('passiveaddr')
+       if result[0].get('passiveaddr') == "*":
+          servaddr="127.0.0.1"
+       else:
+          servaddr=result[0].get('passiveaddr')
     try:
        ftp = FTPHandle(servaddr,int(result[0].get('listenport')),'0','1')
     except:
        newflist=[]
        msg={'color':'red','message':u'FTP服务连接失败,请检查FTP配置'}
        return template('fileshare',session=s,msg=msg,path=path,ftpdirs=[])
-    ftp.Login(ftpuser,ftppass)
+    try:
+       ftp.Login(ftpuser,ftppass)
+    except:
+       newflist=[]
+       msg={'color':'red','message':u'FTP服务连接失败,请检查FTP配置'}
+       return template('fileshare',session=s,msg=msg,path=path,ftpdirs=[])
     flistdict=ftp.getdirs()
-    #print flistdict.get('dirs')
     ftp.close()
     return template('fileshare',session=s,msg={},path=path,ftpdirs=flistdict.get('dirs'))
 
@@ -317,13 +324,20 @@ def getfileshareinfo(path):
        else:
           servaddr=result[0].get('listenaddr')
     else:
-       servaddr=result[0].get('passiveaddr')
+       if result[0].get('passiveaddr') == "*":
+          servaddr="127.0.0.1"
+       else:
+          servaddr=result[0].get('passiveaddr')
     try:
        ftp = FTPHandle(servaddr,int(result[0].get('listenport')),'0','1')
     except:
        newflist=[]
        return json.dumps(newflist)
-    ftp.Login(ftpuser,ftppass)
+    try:
+       ftp.Login(ftpuser,ftppass)
+    except:
+       newflist=[]
+       return json.dumps(newflist)
     if path == 'root':
        flistdict=ftp.getdirs()
     else:
@@ -370,7 +384,10 @@ def do_upload():
        else:
           servaddr=result[0].get('listenaddr')
     else:
-       servaddr=result[0].get('passiveaddr')
+       if result[0].get('passiveaddr') == "*":
+          servaddr="127.0.0.1"
+       else:
+          servaddr=result[0].get('passiveaddr')
     try:
        ftp = FTPHandle(servaddr,int(result[0].get('listenport')),'0','1')
     except:

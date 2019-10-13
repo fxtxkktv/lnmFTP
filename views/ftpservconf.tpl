@@ -149,7 +149,7 @@
                                 value="60000-60020"
                %end 
                >
-			   <input type="text" style="width:105px" class="form-control" id="passiveaddr" name="passiveaddr" onkeyup="this.value=this.value.replace(/[^\d.*,/]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.*,/]/g,'')" placeholder="被动模式IP" aria-describedby="inputGroupSuccess4Status"
+			   <input type="text" style="width:105px" class="form-control" id="passiveaddr" name="passiveaddr" onkeyup="this.value=this.value.replace(/[^\d.*/]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.*/]/g,'')" placeholder="被动模式IP" aria-describedby="inputGroupSuccess4Status"
                %if info.get('passiveaddr',''): 
                                 value="{{info.get('passiveaddr','')}}"
                %else :
