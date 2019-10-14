@@ -304,7 +304,12 @@ def fileshare(path):
        newflist=[]
        msg={'color':'red','message':u'FTP服务连接失败,请检查FTP配置'}
        return template('fileshare',session=s,msg=msg,path=path,ftpdirs=[])
-    flistdict=ftp.getdirs()
+    try: 
+       flistdict=ftp.getdirs()
+    except:
+       newflist=[]
+       msg={'color':'red','message':u'目录读取失败,请检查FTP配置'}
+       return template('fileshare',session=s,msg=msg,path=path,ftpdirs=[])
     ftp.close()
     return template('fileshare',session=s,msg={},path=path,ftpdirs=flistdict.get('dirs'))
 

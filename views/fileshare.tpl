@@ -206,8 +206,8 @@ $(function(){
                var fsize = ufile.size;
                var fdesc = new Blob([window.fileString]);
                var ftype = (fname.substr(fname.lastIndexOf("."))).toLowerCase();
-               if ( fsize > 10485760 ){
-                  alert("文件不应该大于10M，请压缩后重新上传");
+               if ( fsize > 52428800 ){
+                  alert("文件不应该大于500M，请压缩后重新上传");
                   return false;
                }
                if( ftype != ".txt" && ftype != ".rar" && ftype != ".zip" && ftype != ".doc" && ftype != ".docx" && ftype != ".xls" && ftype != ".xlsx" && ftype != ".pdf" && ftype != ".jpg" && ftype != ".bmp"){
