@@ -3,7 +3,7 @@
 ## 安装步骤(仅针对centos/redhat发行版,其他版本自行测试)
 
 1. 安装LnmOS初始化环境<br>
-curl -k 'https://raw.githubusercontent.com/fxtxkktv/fxtxkktv.github.io/master/files/Install_LnmOS_env.sh'|bash <br>
+curl -o - 'https://raw.githubusercontent.com/fxtxkktv/fxtxkktv.github.io/master/files/Install_LnmOS_env.sh'|bash <br>
 
 2. 获取主程序<br>
 git clone https://github.com/fxtxkktv/lnmFTP.git <br>
