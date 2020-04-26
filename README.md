@@ -1,35 +1,26 @@
 # 该项目应用于企业FTP管理系统、支持SSL+密码认证多种配置功能
-### 客户端下载：https://pan.baidu.com/s/1xDAfspJdBEm9ilipT61PbQ 分享密码:vzfn
 
 ## 安装步骤(仅针对centos/redhat发行版,其他版本自行测试)
 
-1. 安装初始化环境 python >=2.7 (推荐lnmos定制版本,可以在"客户端下载"中获取) <br>
-rpm -i python27-2.7.15-lnmos.x86_64.rpm <br>
-export PATH=$PATH:/opt/Py27lnmos/bin/ <br>
-安装pip工具 <br>
-wget https://bootstrap.pypa.io/get-pip.py <br>
-python2.7 get-pip.py <br>
-获取程序代码 <br>
+1. 安装LnmOS初始化环境<br>
+curl -k 'https://raw.githubusercontent.com/fxtxkktv/fxtxkktv.github.io/master/files/Install_LnmOS_env.sh'|bash <br>
+
+2. 获取主程序<br>
 git clone https://github.com/fxtxkktv/lnmFTP.git <br>
 进入程序目录 <br>
 cd lnmFTP <br>
-安装virtualenv组件[使程序运行环境和系统环境分离] <br>
-pip2.7 install virtualenv <br> 
-virtualenv -p /opt/Py27lnmos/bin/python --no-site-packages venv <br>
+创建程序独立运行Python环境 <br>
+/opt/Py27lnmos/bin/virtualenv -p /opt/Py27lnmos/bin/python venv <br>
 进入virtualenv环境 <br>
 source venv/bin/activate <br>
-
-2. 安装程序运行模块 <br>
-MySQL服务 <br>
-yum install -y gcc mysql-server mysql-devel MySQL-Python <br>
-FTP服务: [安装lnmOS定制RPM包,可在客户端下载中获取] <br>
+FTP服务: [安装lnmOS定制RPM包,可在主页资源包获取](https://github.com/fxtxkktv/fxtxkktv.github.io/tree/master/files/RPM组件包/) <br>
 rpm -i pure-ftpd-1.0.46-lnmos.x86_64.rpm <br>
 安装Python程序扩展包 <br>
-pip install -r readme/requirements.txt <br>
+/opt/Py27lnmos/bin/pip install -r readme/requirements.txt <br>
 
 3. 创建数据库并恢复数据模版 <br>
 [创建数据库]: # mysql -u root -p -e "create database ftpdb" <br>
-[恢复数据模版]: # mysql -u root -p ftpdb < readme/xxxxxx_Init.sql <br>
+[恢复数据模版]: # mysql -u root -p ftpdb < readme/db_schema.sql <br>
 [配置数据库连接及其他]: # vim config/config.ini <br>
 
 4. 正式运行程序 <br>
