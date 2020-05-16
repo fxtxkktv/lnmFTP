@@ -1,4 +1,3 @@
-#!/opt/escftp/venv/bin/python
 #coding=utf-8
 import os,sys,logging,time,datetime
 import bottle

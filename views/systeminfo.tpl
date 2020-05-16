@@ -13,17 +13,17 @@
                         <a href="#" data-toggle="dispose"><i class="fa fa-times"></i></a>
                     </div>
                 </div><!--Widget Header-->
-   <div class="row">
+  <div class="row">
     <div class="box col-md-6">
         <div class="box-inner widget" style="background: #fff;">
             <div class="box-header well" data-original-title>
                 <i class="glyphicon glyphicon-list-alt widget-icon"></i>
-		<span class="widget-caption themesecondary">系统信息</span>
-		<!--a href="/systeminfomore" style="float:right;" ><i class="fa fa-sliders"></i></a-->
+                <span class="widget-caption themesecondary">系统信息</span>
+                <!--a href="/systeminfomore" style="float:right;" ><i class="fa fa-sliders"></i></a-->
             </div>
 	
-            <div class="box-content">
-		<div style="display: block;">
+           <div class="box-content">
+              <div style="display: block;">
                     <table class="table">
                         <tbody>
                         <tr>
@@ -46,57 +46,57 @@
                             <td>Python版本:</td>
                             <td class="center">{{info.get('pyversion','')}}</td>
                         </tr>
-			<tr>
+                        <tr>
                             <td>CPU型号:</td>
                             <td class="center">{{info.get('cpumode','')}}</td>
                         </tr>
-			<tr>
+                        <tr>
                             <td>MEM容量:</td>
                             <td class="center">{{info.get('memsize','')}}</td>
                         </tr>
-			<tr>
+                        <tr>
                             <td>APP版本:</td>
-			    <td class="center">{{info.get('appversion','')}}</td>
+                            <td class="center">{{info.get('appversion','')}}</td>
                         </tr>
                         </tbody>
                     </table>
-                </div>
+              </div>
+           </div>
         </div>
-      </div>
-   </div>
+    </div>
 
-   <div class="box col-md-6">
+    <div class="box col-md-6">
         <div class="box-inner widget" style="background: #fff;">
             <div class="box-header well" data-original-title="">
                 <i class="glyphicon glyphicon-list-alt widget-icon"></i>
                 <span class="widget-caption themesecondary">管理日志</span>
-		<a href="/applog" style="float:right;" ><i class="fa fa-sliders"></i></a>
+                <a href="/applog" style="float:right;" ><i class="fa fa-sliders"></i></a>
             </div>
             <div class="box-content">
-		<div style="display: block;">
-                    <table class="table">
-                        <tbody>
-			<tr>
+		      <div style="display: block;">
+                 <table class="table">
+                  <tbody>
+                    <tr>
                         <td>用户</td>
                         <td class="center">操作信息</td>
                         <td class="center">远程主机</td>
                         <td class="center">操作时间</td>
-			</tr>
-			%for log in logdict:
-			<tr>
-			<td>{{log.get('objtext','')}}</td>
-			<td class="center">{{log.get('objact','')}}</td>
-			<td class="center">{{log.get('objhost','')}}</td>
-			<td class="center">{{log.get('objtime','')}}</td>		
-			</tr>
-                        %end
-                        </tbody>
-                    </table>
-                </div>
+                    </tr>
+			        %for log in logdict:
+			        <tr>
+			          <td>{{log.get('objtext','')}}</td>
+                      <td class="center">{{log.get('objact','')}}</td>
+                      <td class="center">{{log.get('objhost','')}}</td>
+                      <td class="center">{{log.get('objtime','')}}</td>		
+                    </tr>
+                    %end
+                  </tbody>
+                 </table>
+              </div>
             </div>
         </div>
-   </div>
-   <!--div class="box col-md-12">
+    </div>
+    <!--div class="box col-md-12">
         <div class="box-inner widget" style="background: #fff;height: 330px;">
             <div class="box-header well" style="margin-top: 0px;margin-left: 0px;" data-original-title="">
                 <i class="glyphicon glyphicon-list-alt widget-icon"></i>
@@ -106,7 +106,10 @@
 	    <div id="echartsLine2" class="box-content" style="width: 32%;height: 300px;float: left;margin-top: 0px;margin-left: 10px;"></div>
 	    <div id="echartsLine3" class="box-content" style="width: 32%;height: 300px;float: left;margin-top: 0px;margin-left: 10px;"></div>
         </div>
-   </div-->
+    </div-->
+  </div>
+
+  <div class="row">
    <div class="box col-md-4">
         <div class="box-inner widget" style="background: #fff; height: 300px;">
             <div class="box-header well" data-original-title="">
@@ -137,8 +140,7 @@
 	    </div>
         </div>
    </div>
-  </div-->
-</div>
+  </div>
 
 <script src="https://cdn.staticfile.org/echarts/4.2.0-rc.1/echarts.js"></script>
 <script type="text/javascript">
