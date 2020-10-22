@@ -13,8 +13,8 @@ cd lnmFTP <br>
 /opt/Py27lnmos/bin/virtualenv -p /opt/Py27lnmos/bin/python venv <br>
 进入virtualenv环境 <br>
 source venv/bin/activate <br>
-FTP服务: [安装lnmOS定制RPM包,可在主页资源包获取](https://github.com/fxtxkktv/fxtxkktv.github.io/tree/master/files/RPM组件包/) <br>
-rpm -i pure-ftpd-1.0.46-lnmos.x86_64.rpm <br>
+FTP服务: [安装lnmOS定制RPM包,可在主页资源包获取pure-ftpd](https://github.com/fxtxkktv/fxtxkktv.github.io/tree/master/files/RPM组件包/) <br>
+rpm -i pure-ftpd-1.0.46-xxxxxx.x86_64.rpm <br>
 安装Python程序扩展包 <br>
 /opt/Py27lnmos/bin/pip install -r readme/requirements.txt <br>
 

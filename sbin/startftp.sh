@@ -29,11 +29,14 @@ case "$1" in
         ;;
   stop)
         echo -en "Stoping FTPServer:\t\t"
-        #killall $binIIpath
-        $wkdir/sbin/start-stop-daemon --stop  --name pure-ftpd >/dev/null 2>&1
+        #$wkdir/sbin/start-stop-daemon --stop  --name pure-ftpd >/dev/null 2>&1
+        for pid in  $( ps ax|grep pure-ftpd |grep -v 'grep'|awk '{print $1}');do
+            kill -9 $pid >/dev/null 2>&1 
+        done
         RETVAL=$?
         #echo
         if [ $RETVAL -eq 0 ] ;then
+           rm -f $pidfile >/dev/null 2>&1
            echo "Done..."
         else
            echo "Failed"
