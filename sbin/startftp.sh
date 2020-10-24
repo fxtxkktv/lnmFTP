@@ -13,6 +13,7 @@ pidfile="$wkdir/plugins/ftpd/ftpd.pid"
 binIpath=$(which pure-config.py)
 #binIIpath=$(which pure-uploadscript)
 
+true > /etc/localnet
 
 case "$1" in
   start)
